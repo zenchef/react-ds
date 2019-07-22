@@ -19,6 +19,7 @@ type Props = {
   disabled?: boolean,
   target: HTMLElement,
   onSelectionChange(elements: Array<any>): void,
+  onHighlight(elements: Array<any>): void,
   elements: Array<HTMLElement>,
   // eslint-disable-next-line react/no-unused-prop-types
   offset?: {
@@ -194,6 +195,9 @@ export default class Selection extends React.PureComponent<Props, State> { // es
     });
 
     this.props.onSelectionChange(this.selectedChildren);
+    if (this.props.onHighlight) {
+      this.props.onHighlight([]);
+    }
     this.selectedChildren = [];
   };
 
@@ -273,6 +277,7 @@ export default class Selection extends React.PureComponent<Props, State> { // es
    * @private
    */
   updateCollidingChildren = (selectionBox: Box) => {
+    const oldSelectedChildren = this.selectedChildren;
     this.selectedChildren = [];
     if (this.props.elements) {
       this.props.elements.forEach((ref, $index) => {
@@ -290,6 +295,15 @@ export default class Selection extends React.PureComponent<Props, State> { // es
           }
         }
       });
+    }
+    if (this.props.onHighlight && JSON.stringify(oldSelectedChildren) !== JSON.stringify(this.selectedChildren)) {
+      if (window.requestAnimationFrame) {
+        window.requestAnimationFrame(() => {
+          this.props.onHighlight(this.selectedChildren);
+        });
+      } else {
+        this.props.onHighlight(this.selectedChildren);
+      }
     }
   };
 
@@ -343,6 +357,7 @@ Selection.propTypes = {
   target: PropTypes.object,
   disabled: PropTypes.bool,
   onSelectionChange: PropTypes.func.isRequired,
+  onHighlight: PropTypes.func,
   elements: PropTypes.array.isRequired,
   // eslint-disable-next-line react/no-unused-prop-types
   offset: PropTypes.object,
