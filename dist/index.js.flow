@@ -276,7 +276,8 @@ export default class Selection extends React.PureComponent<Props, State> { // es
 
   /**
    * Updates the selected items based on the
-   * collisions with selectionBox
+   * collisions with selectionBox,
+   * also updates the highlighted items if they have changed
    * @private
    */
   updateCollidingChildren = (selectionBox: Box) => {
