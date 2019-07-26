@@ -1,6 +1,6 @@
 {
   "name": "@zenchef/react-ds",
-  "version": "1.10.3",
+  "version": "1.11.1",
   "description": "Simple React Drag-to-Select component",
   "main": "dist/index.js",
   "files": [

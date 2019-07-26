@@ -18,6 +18,7 @@ export type Box = {
 type Props = {
   disabled?: boolean,
   target: HTMLElement,
+  onSelectionStart(): void,
   onSelectionChange(elements: Array<any>): void,
   onHighlightChange(elements: Array<any>): void,
   elements: Array<HTMLElement>,
@@ -76,6 +77,7 @@ export default class Selection extends React.PureComponent<Props, State> { // es
       endPoint: null,
       selectionBox: null,
       offset: getOffset(props),
+      selectionStarted: false,
     };
 
     this.selectedChildren = [];
@@ -194,6 +196,7 @@ export default class Selection extends React.PureComponent<Props, State> { // es
       startPoint: null,
       endPoint: null,
       selectionBox: null,
+      selectionStarted: false,
     });
 
     this.props.onSelectionChange(this.selectedChildren);
@@ -216,12 +219,19 @@ export default class Selection extends React.PureComponent<Props, State> { // es
         y: e.pageY - this.state.offset.top,
       };
 
+      if (!this.state.selectionStarted && this.props.onSelectionStart) {
+        this.props.onSelectionStart();
+      } else {
+        console.log('selection started', this.state.selectionStarted)
+      }
+
       this.setState({
         endPoint,
         selectionBox: this.calculateSelectionBox(
           this.state.startPoint,
           endPoint
         ),
+        selectionStarted: true,
       });
     }
   };
@@ -234,12 +244,17 @@ export default class Selection extends React.PureComponent<Props, State> { // es
         y: e.touches[0].pageY - this.state.offset.top,
       };
 
+      if (!this.state.selectionStarted && this.props.onSelectionStart) {
+        this.props.onSelectionStart();
+      }
+
       this.setState({
         endPoint,
         selectionBox: this.calculateSelectionBox(
           this.state.startPoint,
           endPoint
         ),
+        selectionStarted: true,
       });
     }
   };
@@ -360,6 +375,7 @@ export default class Selection extends React.PureComponent<Props, State> { // es
 Selection.propTypes = {
   target: PropTypes.object,
   disabled: PropTypes.bool,
+  onSelectionStart: PropTypes.func,
   onSelectionChange: PropTypes.func.isRequired,
   onHighlightChange: PropTypes.func,
   elements: PropTypes.array.isRequired,
