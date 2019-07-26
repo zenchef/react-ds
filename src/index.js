@@ -18,7 +18,7 @@ export type Box = {
 type Props = {
   disabled?: boolean,
   target: HTMLElement,
-  onSelectionStart(): void,
+  onSelectionStart(e: Event): void,
   onSelectionChange(elements: Array<any>): void,
   onHighlightChange(elements: Array<any>): void,
   elements: Array<HTMLElement>,
@@ -221,7 +221,7 @@ export default class Selection extends React.PureComponent<Props, State> { // es
       };
 
       if (!this.state.selectionStarted && this.props.onSelectionStart) {
-        this.props.onSelectionStart();
+        this.props.onSelectionStart(e);
       }
 
       this.setState({
@@ -244,7 +244,7 @@ export default class Selection extends React.PureComponent<Props, State> { // es
       };
 
       if (!this.state.selectionStarted && this.props.onSelectionStart) {
-        this.props.onSelectionStart();
+        this.props.onSelectionStart(e);
       }
 
       this.setState({
